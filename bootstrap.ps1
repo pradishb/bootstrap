@@ -1,17 +1,25 @@
 # Installs my usual apps on a fresh Windows machine. Skips anything already installed.
-# Double-click install-apps.cmd, or run:
-#   powershell -ExecutionPolicy Bypass -File .\install-apps.ps1
+# Run directly from GitHub:
+#   irm https://raw.githubusercontent.com/pradishb/bootstrap/master/bootstrap.ps1 | iex
+# or locally:
+#   powershell -ExecutionPolicy Bypass -File .\bootstrap.ps1
+# Uses `return` rather than `exit` so an `irm | iex` run doesn't close the caller's shell.
+
+$scriptUrl = 'https://raw.githubusercontent.com/pradishb/bootstrap/master/bootstrap.ps1'
 
 # --- Relaunch elevated (UAC prompt) if not already admin ---
 $principal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $principal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
     Write-Host 'Requesting administrator rights...' -ForegroundColor Yellow
+    # $PSCommandPath is empty when run via `irm | iex`, so re-download in the elevated shell instead
+    if ($PSCommandPath) { $launch = "-File `"$PSCommandPath`"" }
+    else { $launch = "-Command `"irm $scriptUrl | iex`"" }
     try {
-        Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass -File `"$PSCommandPath`"" -ErrorAction Stop
+        Start-Process powershell.exe -Verb RunAs -ArgumentList "-NoProfile -ExecutionPolicy Bypass $launch" -ErrorAction Stop
     } catch {
         Write-Host 'Administrator rights were declined. Exiting.' -ForegroundColor Red
     }
-    exit
+    return
 }
 
 $ErrorActionPreference = 'Continue'
@@ -44,7 +52,7 @@ if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
     } catch {}
     if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
         Write-Host 'winget is still unavailable. Update "App Installer" from the Microsoft Store and re-run.' -ForegroundColor Red
-        exit 1
+        return
     }
 }
 
