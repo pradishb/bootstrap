@@ -113,6 +113,44 @@ if ($rustdeskPresent -or (Test-Path "$env:ProgramFiles\RustDesk\rustdesk.exe")) 
     }
 }
 
+# --- Claude Code: chime when Claude finishes a response (Stop hook) ---
+# A loud-but-soft two-note chime, for weak speakers. The .wav lives in this repo;
+# the hook is merged into ~/.claude/settings.json, keeping everything else there.
+$claudeDir = Join-Path $env:USERPROFILE '.claude'
+$wav = Join-Path $claudeDir 'sounds\done.wav'
+$settingsPath = Join-Path $claudeDir 'settings.json'
+try {
+    if (-not (Test-Path $wav)) {
+        New-Item -ItemType Directory -Force -Path (Split-Path $wav) | Out-Null
+        Invoke-WebRequest 'https://raw.githubusercontent.com/pradishb/bootstrap/master/sounds/done.wav' -OutFile $wav -UseBasicParsing
+    }
+    $settings = if (Test-Path $settingsPath) { Get-Content $settingsPath -Raw | ConvertFrom-Json } else { $null }
+    if (-not $settings) { $settings = [pscustomobject]@{} }
+    if ((Get-Content $settingsPath -Raw -ErrorAction SilentlyContinue) -match 'done\.wav') {
+        Write-Host '[skip]    Claude Code chime already set up' -ForegroundColor DarkGray
+        $skipped += 'Claude Code chime'
+    } else {
+        Write-Host '[install] Claude Code chime (Stop hook)...' -ForegroundColor Cyan
+        $hook = [pscustomobject]@{
+            hooks = @([pscustomobject]@{
+                type    = 'command'
+                command = 'powershell.exe'
+                args    = @('-NoProfile', '-Command', "(New-Object Media.SoundPlayer '$wav').PlaySync()")
+                async   = $true
+            })
+        }
+        if (-not $settings.hooks) { $settings | Add-Member -NotePropertyName hooks -NotePropertyValue ([pscustomobject]@{}) }
+        $stop = @($settings.hooks.Stop | Where-Object { $_ }) + $hook
+        $settings.hooks | Add-Member -NotePropertyName Stop -NotePropertyValue $stop -Force
+        New-Item -ItemType Directory -Force -Path $claudeDir | Out-Null
+        # No BOM: Windows PowerShell's UTF8 encoding writes one, and a JSON parser may reject it.
+        [IO.File]::WriteAllText($settingsPath, ($settings | ConvertTo-Json -Depth 20))
+        $installed += 'Claude Code chime'
+    }
+} catch {
+    $failed += "Claude Code chime ($($_.Exception.Message))"
+}
+
 # --- Summary ---
 Write-Host "`n===== Summary =====" -ForegroundColor White
 Write-Host "Installed: $($installed -join ', ')" -ForegroundColor Green

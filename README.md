@@ -46,6 +46,10 @@ Other sources:
 - **Wrangler** — `npm install -g wrangler`
 - **RustDesk** — latest x64 MSI from GitHub releases
 
+Settings:
+
+- **Claude Code chime** — copies `sounds/done.wav` to `~/.claude/sounds/` and adds a `Stop` hook to `~/.claude/settings.json` that plays it whenever Claude finishes a response (your other settings are kept)
+
 If winget is missing (common on a brand-new install), the script tries to register App Installer first. If that fails, update **App Installer** from the Microsoft Store and run it again.
 
 A summary of installed, skipped, and failed apps is printed at the end.
