@@ -37,6 +37,8 @@ Via winget:
 - GitHub CLI
 - Claude Code
 - Node.js LTS
+- AutoHotkey
+- ShareX
 
 Other sources:
 

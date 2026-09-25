@@ -40,6 +40,8 @@ $apps = [ordered]@{
     'GitHub CLI'            = 'GitHub.cli'
     'Claude Code'           = 'Anthropic.ClaudeCode'
     'Node.js LTS'           = 'OpenJS.NodeJS.LTS'   # needed for wrangler
+    'AutoHotkey'            = 'AutoHotkey.AutoHotkey'
+    'ShareX'                = 'ShareX.ShareX'
 }
 
 $installed = @(); $skipped = @(); $failed = @()
