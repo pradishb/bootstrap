@@ -113,6 +113,31 @@ if ($rustdeskPresent -or (Test-Path "$env:ProgramFiles\RustDesk\rustdesk.exe")) 
     }
 }
 
+# --- Salt CLI wrappers -> ~/.local/bin (run salt on the remote master over ssh) ---
+# Downloaded with CRLF endings: cmd's goto/labels can misbehave on LF-only batch files.
+$localBin = Join-Path $env:USERPROFILE '.local\bin'
+$saltFiles = 'remotesalt.cmd', 'salt.cmd', 'salt-call.cmd', 'salt-key.cmd', 'salt-run.cmd'
+if (-not ($saltFiles | Where-Object { -not (Test-Path (Join-Path $localBin $_)) })) {
+    Write-Host '[skip]    Salt scripts already in ~/.local/bin' -ForegroundColor DarkGray
+    $skipped += 'Salt scripts'
+} else {
+    Write-Host '[install] Salt scripts -> ~/.local/bin...' -ForegroundColor Cyan
+    try {
+        New-Item -ItemType Directory -Force -Path $localBin | Out-Null
+        foreach ($f in $saltFiles) {
+            $text = (Invoke-WebRequest "https://raw.githubusercontent.com/pradishb/bootstrap/master/bin/$f" -UseBasicParsing).Content
+            [IO.File]::WriteAllText((Join-Path $localBin $f), ($text -replace '\r?\n', "`r`n"))
+        }
+        $userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+        if (($userPath -split ';') -notcontains $localBin) {
+            [Environment]::SetEnvironmentVariable('Path', ($userPath.TrimEnd(';') + ";$localBin").TrimStart(';'), 'User')
+        }
+        $installed += 'Salt scripts'
+    } catch {
+        $failed += "Salt scripts ($($_.Exception.Message))"
+    }
+}
+
 # --- Claude Code: chime when Claude finishes a response (Stop hook) ---
 # A loud-but-soft two-note chime, for weak speakers. The .wav lives in this repo;
 # the hook is merged into ~/.claude/settings.json, keeping everything else there.

@@ -46,6 +46,10 @@ Other sources:
 - **Wrangler** — `npm install -g wrangler`
 - **RustDesk** — latest x64 MSI from GitHub releases
 
+Scripts:
+
+- **Salt wrappers** — copies `bin/*.cmd` (`salt`, `salt-call`, `salt-key`, `salt-run`) to `~/.local/bin` and adds that folder to the user PATH. They run the salt CLI on the remote salt-master over ssh.
+
 Settings:
 
 - **Claude Code chime** — copies `sounds/done.wav` to `~/.claude/sounds/` and adds a `Stop` hook to `~/.claude/settings.json` that plays it whenever Claude finishes a response (your other settings are kept)
