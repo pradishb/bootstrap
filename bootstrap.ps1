@@ -42,6 +42,7 @@ $apps = [ordered]@{
     'Node.js LTS'           = 'OpenJS.NodeJS.LTS'   # needed for wrangler
     'AutoHotkey'            = 'AutoHotkey.AutoHotkey'
     'ShareX'                = 'ShareX.ShareX'
+    'Task'                  = 'Task.Task'           # taskfile.dev
 }
 
 $installed = @(); $skipped = @(); $failed = @()

@@ -39,6 +39,7 @@ Via winget:
 - Node.js LTS
 - AutoHotkey
 - ShareX
+- Task (Taskfile)
 
 Other sources:
 
