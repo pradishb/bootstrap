@@ -43,6 +43,7 @@ $apps = [ordered]@{
     'AutoHotkey'            = 'AutoHotkey.AutoHotkey'
     'ShareX'                = 'ShareX.ShareX'
     'Task'                  = 'Task.Task'           # taskfile.dev
+    'Tailscale'             = 'Tailscale.Tailscale'
 }
 
 $installed = @(); $skipped = @(); $failed = @()

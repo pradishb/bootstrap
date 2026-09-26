@@ -40,6 +40,7 @@ Via winget:
 - AutoHotkey
 - ShareX
 - Task (Taskfile)
+- Tailscale
 
 Other sources:
 
