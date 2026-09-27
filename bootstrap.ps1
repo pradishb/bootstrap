@@ -44,6 +44,7 @@ $apps = [ordered]@{
     'ShareX'                = 'ShareX.ShareX'
     'Task'                  = 'Task.Task'           # taskfile.dev
     'Tailscale'             = 'Tailscale.Tailscale'
+    'Syncthing'             = 'Syncthing.Syncthing'
 }
 
 $installed = @(); $skipped = @(); $failed = @()
@@ -79,6 +80,38 @@ foreach ($name in $apps.Keys) {
 
 # Pick up PATH changes from the installs above (e.g. node/npm) without reopening the shell
 $env:Path = [Environment]::GetEnvironmentVariable('Path', 'Machine') + ';' + [Environment]::GetEnvironmentVariable('Path', 'User')
+
+# --- Syncthing: run at login (Startup folder shortcut, no console window / browser) ---
+# winget installs Syncthing as a portable zip into a versioned folder, so the exe path changes
+# on upgrade. The shortcut is rebuilt whenever it doesn't point at the current exe.
+$startupLnk = Join-Path ([Environment]::GetFolderPath('Startup')) 'Syncthing.lnk'
+$syncthing = (Get-Command syncthing -ErrorAction SilentlyContinue).Source
+if (-not $syncthing) {
+    $failed += 'Syncthing startup (syncthing.exe not found - install failed?)'
+} else {
+    $shell = New-Object -ComObject WScript.Shell
+    if ((Test-Path $startupLnk) -and $shell.CreateShortcut($startupLnk).TargetPath -eq $syncthing) {
+        Write-Host '[skip]    Syncthing startup shortcut already set up' -ForegroundColor DarkGray
+        $skipped += 'Syncthing startup'
+    } else {
+        Write-Host '[install] Syncthing startup shortcut...' -ForegroundColor Cyan
+        try {
+            $lnk = $shell.CreateShortcut($startupLnk)
+            $lnk.TargetPath = $syncthing
+            $lnk.Arguments = '--no-console --no-browser'
+            $lnk.WorkingDirectory = Split-Path $syncthing
+            $lnk.Save()
+            # Start it now too, so there's no need to log out and back in. Opened via explorer
+            # so it runs un-elevated, like it will at login, rather than inheriting admin rights.
+            if (-not (Get-Process syncthing -ErrorAction SilentlyContinue)) {
+                Start-Process explorer.exe -ArgumentList "`"$startupLnk`""
+            }
+            $installed += 'Syncthing startup'
+        } catch {
+            $failed += "Syncthing startup ($($_.Exception.Message))"
+        }
+    }
+}
 
 # --- Wrangler (Cloudflare CLI; npm package, not in winget) ---
 if (Get-Command wrangler -ErrorAction SilentlyContinue) {

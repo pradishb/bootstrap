@@ -41,6 +41,7 @@ Via winget:
 - ShareX
 - Task (Taskfile)
 - Tailscale
+- Syncthing
 
 Other sources:
 
@@ -53,6 +54,7 @@ Scripts:
 
 Settings:
 
+- **Syncthing at login** — adds a `Syncthing` shortcut to your Startup folder that runs it in the background (`--no-console --no-browser`), and starts it right away. After a winget upgrade of Syncthing, re-run the script to repoint the shortcut. The web UI is at http://127.0.0.1:8384
 - **Claude Code chime** — copies `sounds/done.wav` to `~/.claude/sounds/` and adds a `Stop` hook to `~/.claude/settings.json` that plays it whenever Claude finishes a response (your other settings are kept)
 
 If winget is missing (common on a brand-new install), the script tries to register App Installer first. If that fails, update **App Installer** from the Microsoft Store and run it again.
