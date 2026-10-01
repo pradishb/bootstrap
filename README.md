@@ -27,6 +27,7 @@ Via winget:
 - Discord
 - Google Drive
 - KeePass
+- [KeePassPasskey](https://keepasspasskey.github.io/) (Microsoft Store) — needs Windows 11 24H2+. After install, open it once, click **Install plugin**, restart KeePass, then enable it under Windows' advanced passkey options
 - VS Code
 - uv
 - qBittorrent
