@@ -43,6 +43,7 @@ Via winget:
 - Task (Taskfile)
 - Tailscale
 - Syncthing
+- 7-Zip
 
 Other sources:
 

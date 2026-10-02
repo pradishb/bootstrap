@@ -46,6 +46,7 @@ $apps = [ordered]@{
     'Task'                  = 'Task.Task'           # taskfile.dev
     'Tailscale'             = 'Tailscale.Tailscale'
     'Syncthing'             = 'Syncthing.Syncthing'
+    '7-Zip'                 = '7zip.7zip'
 }
 
 $installed = @(); $skipped = @(); $failed = @()
