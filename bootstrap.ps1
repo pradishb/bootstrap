@@ -47,6 +47,7 @@ $apps = [ordered]@{
     'Tailscale'             = 'Tailscale.Tailscale'
     'Syncthing'             = 'Syncthing.Syncthing'
     '7-Zip'                 = '7zip.7zip'
+    'HomeBank'              = 'HomeBank.HomeBank'
 }
 
 $installed = @(); $skipped = @(); $failed = @()
@@ -125,6 +126,18 @@ if (Get-Command wrangler -ErrorAction SilentlyContinue) {
     Write-Host '[install] Wrangler (npm)...' -ForegroundColor Cyan
     npm install -g wrangler
     if ($LASTEXITCODE -eq 0) { $installed += 'Wrangler' } else { $failed += "Wrangler (npm exit $LASTEXITCODE)" }
+}
+
+# --- mbl-xls-to-csv (PyPI package, installed as a uv tool into ~/.local/bin) ---
+if (-not (Get-Command uv -ErrorAction SilentlyContinue)) {
+    $failed += 'mbl-xls-to-csv (uv not found - uv install failed?)'
+} elseif ((uv tool list) -match '^mbl-xls-to-csv ') {
+    Write-Host '[skip]    mbl-xls-to-csv already installed' -ForegroundColor DarkGray
+    $skipped += 'mbl-xls-to-csv'
+} else {
+    Write-Host '[install] mbl-xls-to-csv (uv tool)...' -ForegroundColor Cyan
+    uv tool install mbl-xls-to-csv
+    if ($LASTEXITCODE -eq 0) { $installed += 'mbl-xls-to-csv' } else { $failed += "mbl-xls-to-csv (uv exit $LASTEXITCODE)" }
 }
 
 # --- RustDesk (not in winget; install latest MSI from GitHub) ---

@@ -44,10 +44,12 @@ Via winget:
 - Tailscale
 - Syncthing
 - 7-Zip
+- HomeBank
 
 Other sources:
 
 - **Wrangler** — `npm install -g wrangler`
+- **mbl-xls-to-csv** — `uv tool install mbl-xls-to-csv`
 - **RustDesk** — latest x64 MSI from GitHub releases
 
 Scripts:
