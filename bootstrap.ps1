@@ -48,6 +48,8 @@ $apps = [ordered]@{
     'Syncthing'             = 'Syncthing.Syncthing'
     '7-Zip'                 = '7zip.7zip'
     'HomeBank'              = 'HomeBank.HomeBank'
+    'Viber'                 = 'Rakuten.Viber'
+    'LibreOffice'           = 'TheDocumentFoundation.LibreOffice'
 }
 
 $installed = @(); $skipped = @(); $failed = @()

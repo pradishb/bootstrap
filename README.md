@@ -45,6 +45,8 @@ Via winget:
 - Syncthing
 - 7-Zip
 - HomeBank
+- Viber
+- LibreOffice
 
 Other sources:
 
