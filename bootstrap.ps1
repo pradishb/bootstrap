@@ -165,6 +165,26 @@ if ($rustdeskPresent -or (Test-Path "$env:ProgramFiles\RustDesk\rustdesk.exe")) 
     }
 }
 
+# --- Redis (tporadowski/redis, not in winget; MSI installs it as the "Redis" auto-start service) ---
+# No firewall rule: it's only used locally. The install folder goes on PATH for redis-cli.
+if (Get-Service Redis -ErrorAction SilentlyContinue) {
+    Write-Host '[skip]    Redis already installed' -ForegroundColor DarkGray
+    $skipped += 'Redis'
+} else {
+    Write-Host '[install] Redis (GitHub release)...' -ForegroundColor Cyan
+    try {
+        $release = Invoke-RestMethod 'https://api.github.com/repos/tporadowski/redis/releases/latest'
+        $asset = $release.assets | Where-Object { $_.name -match '^Redis-x64-.*\.msi$' } | Select-Object -First 1
+        $msi = Join-Path $env:TEMP $asset.name
+        Invoke-WebRequest $asset.browser_download_url -OutFile $msi -UseBasicParsing
+        $p = Start-Process msiexec.exe -ArgumentList "/i `"$msi`" /qn /norestart ADD_INSTALLFOLDER_TO_PATH=1 ADD_FIREWALL_RULE=0" -Wait -PassThru
+        if ($p.ExitCode -in 0, 3010) { $installed += 'Redis' } else { $failed += "Redis (msiexec $($p.ExitCode))" }
+        Remove-Item $msi -ErrorAction SilentlyContinue
+    } catch {
+        $failed += "Redis ($($_.Exception.Message))"
+    }
+}
+
 # --- Salt CLI wrappers -> ~/.local/bin (run salt on the remote master over ssh) ---
 # Downloaded with CRLF endings: cmd's goto/labels can misbehave on LF-only batch files.
 $localBin = Join-Path $env:USERPROFILE '.local\bin'

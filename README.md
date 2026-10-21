@@ -54,6 +54,7 @@ Other sources:
 - **Wrangler** — `npm install -g wrangler`
 - **mbl-xls-to-csv** — `uv tool install mbl-xls-to-csv`
 - **RustDesk** — latest x64 MSI from GitHub releases
+- **Redis** — latest x64 MSI from [tporadowski/redis](https://github.com/tporadowski/redis/releases) (Redis 5 for Windows). Runs as the `Redis` Windows service (auto-start, port 6379); install folder added to PATH, no firewall rule
 
 Scripts:
 
