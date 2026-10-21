@@ -50,6 +50,7 @@ $apps = [ordered]@{
     'HomeBank'              = 'HomeBank.HomeBank'
     'Viber'                 = 'Rakuten.Viber'
     'LibreOffice'           = 'TheDocumentFoundation.LibreOffice'
+    'PostgreSQL 18'         = 'PostgreSQL.PostgreSQL.18'
 }
 
 $installed = @(); $skipped = @(); $failed = @()

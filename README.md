@@ -47,6 +47,7 @@ Via winget:
 - HomeBank
 - Viber
 - LibreOffice
+- PostgreSQL 18
 
 Other sources:
 
