@@ -51,6 +51,7 @@ $apps = [ordered]@{
     'Viber'                 = 'Rakuten.Viber'
     'LibreOffice'           = 'TheDocumentFoundation.LibreOffice'
     'PostgreSQL 18'         = 'PostgreSQL.PostgreSQL.18'
+    'Heroku CLI'            = 'Heroku.HerokuCLI'
 }
 
 $installed = @(); $skipped = @(); $failed = @()

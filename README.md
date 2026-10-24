@@ -48,6 +48,7 @@ Via winget:
 - Viber
 - LibreOffice
 - PostgreSQL 18
+- Heroku CLI
 
 Other sources:
 
